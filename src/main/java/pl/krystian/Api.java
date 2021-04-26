@@ -24,7 +24,7 @@ public class Api {
 		
 		user.setName("Krystian Izdebski");
 		book.setBookName("Robinson");
-		user.setBook(book);
+		user.getBook().add(book);
 		
 		userRepo.save(user);
 	}

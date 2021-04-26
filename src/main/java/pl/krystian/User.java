@@ -1,15 +1,24 @@
 package pl.krystian;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
+@JsonIdentityInfo(
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "userID")
 public class User {
 
 	
@@ -18,10 +27,15 @@ public class User {
 	private int userID;
 	private String name;
 	
-	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@JsonManagedReference
-	private Books book;
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@JoinTable(
+			name = "user_book",
+			joinColumns = @JoinColumn(name = "bookID"),
+			inverseJoinColumns = @JoinColumn(name = "userID")
+			)
+	private List<Books> book = new ArrayList<>();
 
+	
 	public int getUserID() {
 		return userID;
 	}
@@ -38,14 +52,12 @@ public class User {
 		this.name = name;
 	}
 
-	public Books getBook() {
+	public List<Books> getBook() {
 		return book;
 	}
 
-	public void setBook(Books book) {
+	public void setBook(List<Books> book) {
 		this.book = book;
 	}
-	
-	
 	
 }
